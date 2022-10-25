@@ -1,6 +1,11 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .models import Note
+from .serializers import NoteSerializer
 
+@api_view(['GET'])
 def getRoutes(request):
     routes = [
         {
@@ -34,7 +39,18 @@ def getRoutes(request):
             'description': 'Deletes and exiting note'
         },
     ]
-    return JsonResponse(routes, safe=False)
-# @api_view(['GET'])
-    return JsonResponse("Notes", safe=False)
+    return Response(routes)
+
+@api_view(['GET'])
+def GetNotes(request):
     notes = Note.objects.all()
+    # many=True indicates we want to serialize a Queryset vs single instance
+    serializer = NoteSerializer(notes, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def GetNote(request, pk):
+    notes = Note.objects.get(id=pk)
+    serializer = NoteSerializer(notes, many=False)
+    return Response(serializer.data)
