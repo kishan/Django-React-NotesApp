@@ -35,3 +35,6 @@ def getRoutes(request):
         },
     ]
     return JsonResponse(routes, safe=False)
+# @api_view(['GET'])
+    return JsonResponse("Notes", safe=False)
+    notes = Note.objects.all()
